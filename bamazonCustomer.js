@@ -38,20 +38,36 @@ function displayInventory() {
   
   function startInquirer() {
     inquirer
-      .prompt({
-        name: "itemID",
-        type: "input",
-        message: "Please enter the item ID of the product you wish to purchase: ",
-        validate: function(value) {
-            if (isNaN(value) === false && parseInt(value) <= 10 && parseInt(value) > 0) {
-            return true;
+      .prompt([
+        {
+            name: "itemID",
+            type: "input",
+            message: "Please enter the item ID of the product you wish to purchase: ",
+            validate: function(value) {
+                if (isNaN(value) === false && parseInt(value) <= 10 && parseInt(value) > 0) {
+                return true;
+                }
+                else {
+                console.log("\nSorry, that is not a valid item ID.")
+                return false;
+                }
             }
-            else {
-            console.log("\nSorry, that is not a valid item ID.")
-            return false;
+        },
+        {
+            name: "quantity",
+            type: "input",
+            message: "How many would you like to purchase?",
+            validate: function(value) {
+                if (isNaN(value)) {
+                return true;
+                }
+                else {
+                console.log("\nPlease enter a valid quanity.")
+                return false;
+              }
             }
         }
-      })
+    ])
       .then(function(answer) {
         console.log("test")
       });
