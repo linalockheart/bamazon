@@ -1,32 +1,18 @@
-var mysql = require("mysql");
+
 var inquirer = require("inquirer");
-
-////////////////////////////////////////need to hide keys
-require("dotenv").config();
-var keys = require("./keys.js");
-///////////////////////////////////////
-var connection = mysql.createConnection({
-  host: "localhost",
-
-  port: 8889,
-
-  user: "root",
-
-  password: "root",
-  database: "products_DB"
-});
+var connection = require("./keys.js");
 
 var productChosen;
 var quantityOrdered;
 
 connection.connect(function(err) {
     if (err) throw err;
-    console.log("Welcome to Bamazon!\nPlease see our list of product offerings below.");
-    console.log("=============================================================");
     displayInventory();
   });
   
 function displayInventory() {
+  console.log("Welcome to Bamazon!\nPlease see our list of product offerings below.");
+  console.log("=============================================================");
     var query = "SELECT item_id,product_name,price FROM products";
       connection.query(query, function(err, res) {
         for (var i = 0; i < res.length; i++) {
@@ -55,7 +41,6 @@ function displayInventory() {
                 productChosen = parseInt(value);
                 // console.log("\n Chosen input: " + productChosen);
                 return true;
-                // selectQuantity();
                 }
                 else {
                 console.log("\nSorry, that is not a valid item ID.");
@@ -83,33 +68,38 @@ function displayInventory() {
     ])
       .then(function(answer) {
         connection.query("SELECT * FROM products WHERE ?", { item_id: productChosen }, function(err, res) {
-            console.log(res);
+            // console.log(res);
             if (quantityOrdered > res[0].stock_quantity) {
-                console.log("Insufficient quantity! Sorry, your order cannot be completed.")
-                console.log("We have " + res[0].stock_quantity + re[0].produce_name "in stock.")
-                inquirer
-                    .prompt([
-                        name: "updateOrRestart",
-                        type: "list",
-                        message: "Would you like to update your order quantity or view the product listings?",
-                        choices: "Update order quantity", "Return to product listing"
-                    ])
-                    .then(function(failedOrder) {
-                        if (failedOrder.choices === "Update order quantity") {
-                            //call update quantity function here
+                console.log("Insufficient quantity! Sorry, your order cannot be completed.");
+                console.log("We only have " + res[0].stock_quantity + " " + res[0].product_name + " in stock.");
+                console.log("Please update your order quantity or select another product.");
+                console.log("=============================================================");
+                displayInventory();
+                }
 
-                        }
-                        if (failedOrder.choices === "Return to product listing") {
-                            displayInventory();
-                        }
+            else {
+                // console.log(res);
+                console.log("Your total is $" + res[0].price + ". Thanks for using Bamazon!");
+                console.log("=============================================================");
+                // console.log("quantity ordered:" + quantityOrdered);
+                // console.log("product chosen: " + productChosen);
+                // console.log(res[0].stock_quantity);
+                connection.query ("UPDATE products SET ? WHERE ?", [
+                    {
+                    stock_quantity: res[0].stock_quantity - quantityOrdered
+                    },
+                    {
+                    item_id: res[0].item_id
                     }
-
+                ],
+                function(err, restart) {
+                    if (err) throw err;
+                    else {
+                      displayInventory();
+                    }
+                  }
+                )
             }
-            // else {
-            //     connection.query (`UPDATE products SET
-            //     //subtract quantity ordered from stock
-            //     console.log("Your total is " + ${products[0].price} + "Thanks for using Bamazon!");
-            // }
-        })
      })
-  }
+  })
+}
