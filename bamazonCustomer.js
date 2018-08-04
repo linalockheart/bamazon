@@ -11,8 +11,10 @@ connection.connect(function(err) {
   });
   
 function displayInventory() {
+
   console.log("Welcome to Bamazon!\nPlease see our list of product offerings below.");
   console.log("=============================================================");
+  
     var query = "SELECT item_id,product_name,price FROM products";
       connection.query(query, function(err, res) {
         for (var i = 0; i < res.length; i++) {
@@ -39,7 +41,6 @@ function displayInventory() {
             validate: function(value) {
                 if (isNaN(value) === false && parseInt(value) <= 10 && parseInt(value) > 0) {
                 productChosen = parseInt(value);
-                // console.log("\n Chosen input: " + productChosen);
                 return true;
                 }
                 else {
@@ -56,7 +57,6 @@ function displayInventory() {
             validate: function(value) {
                 if (isNaN(value) === false) {
                 quantityOrdered = parseInt(value);
-                // console.log("\n Quantity ordered: " + quantityOrdered);
                 return true;
                 }
                 else {
@@ -68,7 +68,7 @@ function displayInventory() {
     ])
       .then(function(answer) {
         connection.query("SELECT * FROM products WHERE ?", { item_id: productChosen }, function(err, res) {
-            // console.log(res);
+
             if (quantityOrdered > res[0].stock_quantity) {
                 console.log("Insufficient quantity! Sorry, your order cannot be completed.");
                 console.log("We only have " + res[0].stock_quantity + " " + res[0].product_name + " in stock.");
@@ -78,12 +78,10 @@ function displayInventory() {
                 }
 
             else {
-                // console.log(res);
+
                 console.log("Your total is $" + res[0].price + ". Thanks for using Bamazon!");
                 console.log("=============================================================");
-                // console.log("quantity ordered:" + quantityOrdered);
-                // console.log("product chosen: " + productChosen);
-                // console.log(res[0].stock_quantity);
+
                 connection.query ("UPDATE products SET ? WHERE ?", [
                     {
                     stock_quantity: res[0].stock_quantity - quantityOrdered
