@@ -20,3 +20,4 @@
 <p>When you start Bamazon, you will see the shop's inventory pulled from the products table in MySQL. For the customer view, each product is displayed with an item id, a product name, and the price. Inquirer prompts you to enter the item id of the product you want to purchase. This field will only accept numbers 1-10, as there are only 10 products in the store. Once you have selected your product, inquirer will prompt you for how many you would like to purchase. If there is enough inventory to fulfil your order, your total will be displayed. If not, you will see how many of your chosen product we have in stock so you can either lower your order quantity or select another item.
 
 <h2>Demo</h2>
+https://drive.google.com/file/d/1Orua3kK4y-WfWXUOqOju5KHB5_QRRh98/view
