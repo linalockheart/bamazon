@@ -14,7 +14,7 @@ function displayInventory() {
 
   console.log("Welcome to Bamazon!\nPlease see our list of product offerings below.");
   console.log("=============================================================");
-  
+
     var query = "SELECT item_id,product_name,price FROM products";
       connection.query(query, function(err, res) {
         for (var i = 0; i < res.length; i++) {
@@ -79,7 +79,7 @@ function displayInventory() {
 
             else {
 
-                console.log("Your total is $" + res[0].price + ". Thanks for using Bamazon!");
+                console.log("Your total is $" + res[0].price * quantityOrdered + ". Thanks for using Bamazon!");
                 console.log("=============================================================");
 
                 connection.query ("UPDATE products SET ? WHERE ?", [
